@@ -2,6 +2,7 @@ After completing some basic Selenium with Python courses, I wanted to see and un
 In this project, pytest was used as the testing framework along with the Page Object Model (POM) folder structure. Initially, I followed the project on the channel, but I encountered a captcha issue with the website used in the training. So, I switched to automationteststore.com as my testing site.
 
 The project includes several test cases:
+
 • Test Create Account: 
 This test verifies that an account is created successfully when valid information is entered in the form.
 
