@@ -2,6 +2,10 @@
 from pytest_metadata.plugin import metadata_key # Key for accessing pytest metadata
 import pytest # Pytest framework for writing and running tests
 from selenium import webdriver # Selenium WebDriver for browser automation
+from base_pages.Login_page import Login_Page
+from base_pages.Products_page import ProductsPage
+from utilities.read_properties import ReadConfig
+
 
 # Define a pytest command-line option for specifying the browser
 def pytest_addoption(parser):
@@ -47,6 +51,22 @@ def setup(browser):
         raise ValueError("Unsupported browser")
     driver.maximize_window()
     return driver
+
+@pytest.fixture()
+def logged_in_cheeks_page(setup, request):
+    driver1 = setup
+    driver1.get(ReadConfig.get_login_page_url())
+    lp = Login_Page(driver1)
+    lp.enter_username(ReadConfig.get_username())  # or fetch from a config
+    lp.enter_password(ReadConfig.get_password())
+    lp.click_login()
+
+    p = ProductsPage(driver1)
+    p.enter_cheeks_submenu()
+    request.cls.driver = driver1
+    return p
+
+
 
 # Add custom metadata to pytest html report
 def pytest_configure(config):
