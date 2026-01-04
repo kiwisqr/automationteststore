@@ -13,6 +13,9 @@ if not exist logs mkdir logs
 if not exist screenshots mkdir screenshots
 
 REM Run only from repo, and force pytest rootdir to avoid scanning C:\
-pytest -m sanity -q test_cases --browser chrome --headless test_cases --rootdir="%CD%"
+pytest -s -v -m "sanity" ^
+  --browser chrome ^
+  --headless ^
+  test_cases --rootdir="%CD%"
 
 endlocal
