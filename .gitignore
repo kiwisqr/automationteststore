@@ -1,0 +1,15 @@
+# IDEs
+.idea
+.vscode
+
+# Python
+_pycache_
+*.pyc
+.pytest_cache
+.venv
+venv
+
+# Test artifacts
+logs
+reports
+screenshots
