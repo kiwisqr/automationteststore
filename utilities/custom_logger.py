@@ -9,17 +9,24 @@ class LogMaker:
 
                 :return: A logger instance configured to write logs to a specific file.
                 """
-        logging.basicConfig(filename="E:\\automationteststore\\logs\\automationteststore.log", # Path to the log file
-                            format = '%(asctime)s:%(levelname)s:%(message)s', # Log format: timestamp, log level, and message
-                            datefmt="%Y-%m-%d %H:%M:%S", # Date and time format
-                            force=True # Ensures existing loggers are overridden with the new configuration
-                            )
+        # Create logs directory inside the project/workspace
+        log_dir = os.path.join(os.getcwd(), "logs")
+        os.makedirs(log_dir, exist_ok=True)
+
+        # Log file path
+        log_file = os.path.join(log_dir, "automationteststore.log")
+
+        logging.basicConfig(
+            filename=log_file,
+            format="%(asctime)s:%(levelname)s:%(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+            force=True
+        )
 
         # Get a logger instance
         logger = logging.getLogger()
 
-        # Set the default logging level to INFO
+        # Set the default logging level
         logger.setLevel(logging.INFO)
 
-        # Return the configured logger instance
         return logger
