@@ -29,7 +29,7 @@ class TestCart:
         yield items_added
         # optional cleanup: remove all items from cart if needed
 
-    @pytest.mark.sanity
+    @pytest.mark.regression
     def test_add_to_cart(self, add_items_to_cart):
         """Test that added items appear in the cart"""
         self.sc.click_cart_icon()

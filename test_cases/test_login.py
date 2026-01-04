@@ -30,7 +30,7 @@ class TestLogin:
         self.driver.get(self.url)
         assert self.driver.title == "Account Login", "Title mismatch"
 
-    @pytest.mark.sanity
+    @pytest.mark.regression
     # Test case 2: Validate login with valid credentials
     def test_valid_login(self, setup):
         self.logger.info("Verification of valid login")
