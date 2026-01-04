@@ -1,4 +1,7 @@
 # Import necessary modules and libraries
+
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.edge.options import Options as EdgeOptions
 from pytest_metadata.plugin import metadata_key # Key for accessing pytest metadata
 import pytest # Pytest framework for writing and running tests
 from selenium import webdriver # Selenium WebDriver for browser automation
@@ -25,9 +28,18 @@ def setup(browser):
     """ Initialize WebDriver and return it """
 
     if browser == "chrome":
-        driver = webdriver.Chrome()
+        options = Options()
+        options.add_argument("--headless=new")  # ✅ ADD HERE
+        options.add_argument("--disable-gpu")
+        options.add_argument("--window-size=1920,1080")
+        driver = webdriver.Chrome(options=options)
+
     elif browser == "edge":
-        driver = webdriver.Edge()
+        options = EdgeOptions()
+        options.add_argument("--headless=new")  # ✅ ADD HERE
+        options.add_argument("--disable-gpu")
+        options.add_argument("--window-size=1920,1080")
+        driver = webdriver.Edge(options=options)
     else:
         raise ValueError(f"Unsupported browser: {browser}")
 
