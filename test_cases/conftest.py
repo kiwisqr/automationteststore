@@ -9,62 +9,46 @@ from utilities.read_properties import ReadConfig
 
 # Define a pytest command-line option for specifying the browser
 def pytest_addoption(parser):
-    """
-        Adds a custom command-line option to pytest for specifying the browser to use during tests.
-
-        :param parser: The parser for command-line arguments in pytest.
-        """
     parser.addoption(
-        "--browser", # The command-line option (e.g., --browser chrome)
-        action="store", # Action to store the value of the option
-        default="chrome", # Default value if no option is provided
-        help="Specify the browser: chrome or edge" # Help text displayed for this option
+        "--browser",
+        action="store",
+        default="chrome",
+        help="Browser: chrome or edge"
     )
 
-# Fixture to retrieve the browser option value
 @pytest.fixture()
 def browser(request):
-    """
-        Retrieves the browser specified in the pytest command-line arguments.
+    return request.config.getoption("--browser").lower()
 
-        :param request: Pytest's built-in request object.
-        :return: The browser type specified in the command-line arguments.
-        """
-    return request.config.getoption("--browser")
-
-# Fixture to set up the WebDriver based on the specified browser
 @pytest.fixture()
 def setup(browser):
-    """
-        Initializes the WebDriver based on the specified browser and returns the driver instance.
+    """ Initialize WebDriver and return it """
 
-        :param browser: The browser type (chrome or edge) passed from the command-line arguments.
-        :return: An instance of the WebDriver for the specified browser.
-        """
-    global driver # Declare driver as a global variable
     if browser == "chrome":
-        driver = webdriver.Chrome() # Initialize Chrome WebDriver
+        driver = webdriver.Chrome()
     elif browser == "edge":
-        driver = webdriver.Edge() # Initialize Edge WebDriver
+        driver = webdriver.Edge()
     else:
-        # Raise an error if the specified browser is not supported
-        raise ValueError("Unsupported browser")
+        raise ValueError(f"Unsupported browser: {browser}")
+
     driver.maximize_window()
-    return driver
+    yield driver     # return driver
+
+    driver.quit()    # closes after test
 
 @pytest.fixture()
-def logged_in_cheeks_page(setup, request):
-    driver1 = setup
-    driver1.get(ReadConfig.get_login_page_url())
-    lp = Login_Page(driver1)
-    lp.enter_username(ReadConfig.get_username())  # or fetch from a config
-    lp.enter_password(ReadConfig.get_password())
-    lp.click_login()
-
-    p = ProductsPage(driver1)
-    p.enter_cheeks_submenu()
-    request.cls.driver = driver1
-    return p
+def add_items_to_cart(setup):
+    # driver1.get(ReadConfig.get_login_page_url())
+    # lp = Login_Page(driver1)
+    # lp.enter_username(ReadConfig.get_username())  # or fetch from a config
+    # lp.enter_password(ReadConfig.get_password())
+    # lp.click_login()
+    setup.get("https://automationteststore.com/")
+    page = ProductsPage(setup)
+    page.enter_cheeks_submenu()
+    items_added = page.add_items_to_cart()
+    # request.cls.driver = driver1
+    yield page, items_added
 
 
 
