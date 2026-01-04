@@ -18,27 +18,37 @@ def pytest_addoption(parser):
         default="chrome",
         help="Browser: chrome or edge"
     )
+    parser.addoption(
+        "--headless",
+        action="store_true",
+        default=False,
+        help="Run browser in headless mode"
+    )
+
 
 @pytest.fixture()
 def browser(request):
     return request.config.getoption("--browser").lower()
 
+
 @pytest.fixture()
-def setup(browser):
-    """ Initialize WebDriver and return it """
+def setup(browser, request):
+    headless = request.config.getoption("--headless")
 
     if browser == "chrome":
         options = Options()
-        options.add_argument("--headless=new")  # ✅ ADD HERE
-        options.add_argument("--disable-gpu")
-        options.add_argument("--window-size=1920,1080")
+        if headless:
+            options.add_argument("--headless=new")
+            options.add_argument("--disable-gpu")
+            options.add_argument("--window-size=1920,1080")
         driver = webdriver.Chrome(options=options)
 
     elif browser == "edge":
         options = EdgeOptions()
-        options.add_argument("--headless=new")  # ✅ ADD HERE
-        options.add_argument("--disable-gpu")
-        options.add_argument("--window-size=1920,1080")
+        if headless:
+            options.add_argument("--headless=new")
+            options.add_argument("--disable-gpu")
+            options.add_argument("--window-size=1920,1080")
         driver = webdriver.Edge(options=options)
     else:
         raise ValueError(f"Unsupported browser: {browser}")
